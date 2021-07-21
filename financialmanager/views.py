@@ -1,23 +1,36 @@
-from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.http.response import Http404, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import withdraw, safebox, deposit
+from django.db.models import Case, When
+from .models import withdraw, safebox, deposit, balance
 from account.models import User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 # Create your views here.
 
+
 @login_required
-def home(request):
-    data = {
-        "users": User.objects.filter(is_financialstaff=True),
-        "boxes": safebox.objects.all(),
-        "withdraws": withdraw.objects.all(),
-        "deposits": deposit.objects.all()
-    }
-    return render(request, 'financialmanager/home.html', context=data)
+def home_view(request):
+    return render(request, 'financialmanager/home.html')
+
+
+@login_required
+def box_view(request, boxslug):
+    box = get_object_or_404(safebox, slug=boxslug)
+    if not request.user in box.members.all():
+        raise Http404(request)
+    else:
+        data = {
+            "members": User.objects.filter(is_financialstaff=True, safebox=box).order_by(Case(When(id=request.user.id, then=0), default=1), 'id'),
+            "boxes": safebox.objects.all(),
+            "box": box,
+            "withdraws": withdraw.objects.all(),
+            "deposits": deposit.objects.all(),
+            "balance": balance.objects.all(),
+        }
+        return render(request, 'financialmanager/box.html', context=data)
 
 
 def withdraw_view(request):
@@ -41,7 +54,7 @@ def withdraw_view(request):
         model.save()
         model.payer.set(payers)
         model.save()
-        messages.add_message(request,messages.SUCCESS,'برداشت وجه ثبت شد')
+        messages.add_message(request, messages.SUCCESS, 'برداشت وجه ثبت شد')
         return redirect("financialmanager:home")
 
 
@@ -63,4 +76,3 @@ def deposit_view(request):
         model.save()
 
         return Response({'Status': 'Done'})
-

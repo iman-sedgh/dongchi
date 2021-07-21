@@ -5,14 +5,14 @@ from .models import User
 
 
 UserAdmin.fieldsets +=  (
-        ('Financial System', {'fields': ('is_financialstaff','balance')}),
+        ('Financial System', {'fields': ('is_financialstaff',)}),
         ('Custom Profile', {'fields': ('avatar',)}),
     )
 
 UserAdmin.list_display =  ('username', 
                              'is_staff', 
                             'is_financialstaff' , 
-                            'balance',
+                            'phone_number',
                         )
 
 
