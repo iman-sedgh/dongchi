@@ -1,5 +1,5 @@
 from django.http.response import Http404, HttpResponse, JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Case, When
@@ -17,7 +17,10 @@ def home_view(request):
 
 
 @login_required
-def box_view(request, boxslug):
+def box_view(request, boxslug=''):
+    if boxslug == '':
+        slg = request.user.safebox.first().slug
+        return redirect('financialmanager:box', boxslug=slg)
     box = get_object_or_404(safebox, slug=boxslug)
     if not request.user in box.members.all():
         raise Http404(request)
@@ -26,8 +29,8 @@ def box_view(request, boxslug):
             "members": User.objects.filter(is_financialstaff=True, safebox=box).order_by(Case(When(id=request.user.id, then=0), default=1), 'id'),
             "boxes": safebox.objects.all(),
             "box": box,
-            "withdraws": withdraw.objects.all(),
-            "deposits": deposit.objects.all(),
+            "box_withdraws": withdraw.objects.filter(box=box),
+            "box_deposits": deposit.objects.filter(box=box),
             "balance": balance.objects.all(),
         }
         return render(request, 'financialmanager/box.html', context=data)
@@ -76,3 +79,16 @@ def deposit_view(request):
         model.save()
 
         return Response({'Status': 'Done'})
+
+
+@api_view(['POST'])
+def box_settings(request):
+    data = request.POST
+    gateway_url = data['gateway_url']
+    gateway_type = data['gateway_type']
+    box = get_object_or_404(safebox, slug=data['safebox'])
+    box.payment_gateway = gateway_url
+    box.save()
+    messages.add_message(request, messages.SUCCESS,
+                         'تنظیمات با موفقیت اعمال شد ')
+    return redirect('financialmanager:box',boxslug = box.slug)

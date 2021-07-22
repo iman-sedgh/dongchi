@@ -47,6 +47,8 @@ def profile_view(request):
 
 
 def login_view(request):
+    if request.user.is_authenticated :
+        return redirect(request,"financialmanager:box")
     if request.method == 'GET':
         return render(request, 'account/login.html')
     else:

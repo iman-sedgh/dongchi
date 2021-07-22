@@ -3,6 +3,9 @@
 {% load templatetags %}
 
 {%block main%}
+<!--Icons-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--Icons-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static  'financialmanager/css/box.css' %}">
 <div class='container' style="direction: rtl;">
@@ -18,6 +21,15 @@
             </select>
 
         </div>
+        <div col style="text-align: center;">
+            {{box.name}}
+            {% ifequal user box.creator %}
+            <a href="#" class="btn btn-info btn-sm " data-bs-toggle="modal" data-bs-target="#boxsettings">
+                تنظیمات
+                <i class="material-icons " style="font-size: medium;">settings</i>
+            </a>
+            {%endifequal%}
+        </div>
     </div>
 </div>
 <main style="direction: rtl;">
@@ -27,7 +39,7 @@
                 <div class="card text-white bg-success mb-3" style="max-width: 18rem; max-height: 180px; height: 100%;">
                     <div class="card-header">تراکنش های انجام شده صندوق</div>
                     <div class="card-body ">
-                        <h3 class="card-title">{{box.withdraw|length}}</h3>
+                        <h3 class="card-title">{{box_withdraws|length}}</h3>
                         <p class="card-text" style="margin-top:15%;">تعداد تراکنش های برداشتی از صندوق </p>
                     </div>
                 </div>
@@ -37,7 +49,8 @@
                 <div class="card text-white bg-primary mb-3" style="max-width: 18rem; max-height: 180px; height: 100%;">
                     <div class="card-header">مجموع واریزی ها</div>
                     <div class="card-body">
-                        <h3 class="card-title">{{box.deposit|length}}</h3>
+                        <h3 class="card-title">{{box_deposits|length}}</h3>
+
                         <p class="card-text" style="margin-top:15%;">تعداد کل واریزی ها توسط اعضای تیم</p>
                     </div>
                 </div>
@@ -48,7 +61,7 @@
                     style="max-width: 18rem; max-height: 180px; height: 100%;">
                     <div class="card-header">واریزی های شما</div>
                     <div class="card-body">
-                        <h3 class="card-title">{{deposits|count:user}}</h3>
+                        <h3 class="card-title">{{box|count:user}}</h3>
                         <p class="card-text" style="margin-top:15%;">تعداد کل واریزی های شما به صندوق </p>
                     </div>
                 </div>
@@ -57,7 +70,8 @@
                 <div class="card text-white bg-info mb-3" style="max-width: 18rem; max-height: 180px; height: 100%;">
                     <div class="card-header">موجودی صندوق</div>
                     <div class="card-body">
-                        <span class="card-title" style="font-size: 28px; direction: ltr; display: inline-block;">{{box.balance}}</span>
+                        <span class="card-title"
+                            style="font-size: 28px; direction: ltr; display: inline-block;">{{box.balance}}</span>
                         <span style="font-size: small;"> تومان </span>
                         <p class="card-text " style="margin-top:15%; ">مبلغ کل موجود در صندوق </p>
                     </div>
@@ -194,9 +208,64 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="boxsettings" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"
+    style="direction: rtl;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">تنظیمات صندوق </h5>
+                <button type="button" class="btn-close  " data-bs-dismiss="modal" aria-label="بستن"
+                    style="margin: 0rem 0rem 0rem !important;"></button>
+            </div>
+            <div class="modal-body">
+                <label style="color: red;" id="errorAlert"></label>
+                <form action="{% url 'financialmanager:boxsettings' %}" id="settingsForm" method="POST">
+                    {%csrf_token%}
+                    <label for="gateway_url" class="form-label" aria-describedby="gateway_url_help">لینک درگاه
+                        پرداخت</label>
+                    <div class="input-group ">
+                        <input type="url" class="form-control" style="direction: ltr;" id="gateway_url"
+                            aria-describedby="basic-addon3" name="gateway_url" value="{{box.payment_gateway}}" >
+                    </div>
+                    <div id="gateway_url_help" class="form-text mb-3" style="direction: ltr;">مثال:
+                        https://idpay.ir/imansedgh </div>
+
+                    <label>ارائه دهنده درگاه پرداخت</label><br>
+                    <input class="form-check-input" type="radio"  id="gateway" value='idpay' name="gateway_type" checked>
+                    <label class="form-check-label" for="gateway">
+                        آیدی پی
+                    </label>
+                    <small>در حال حاضر فقط از ایدی پی پشتیبانی میشود </small>
+                    <br>
+                    <input class="form-check-input" type="radio" id="gateway" value='zarinpal' name="gateway_type" disabled>
+                    <label class="form-check-label" for="gateway">
+                        زرین پال
+                    </label>
+                    <input type="hidden" value="{{box.slug}}" name="safebox">
+                  
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                <a class="btn btn-primary" id='savebutton' onclick="settingsFunction()">
+                    ذخیره</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!--Modals-->
 
 <script>
+    function isValidURL(str) {
+        var pattern = new RegExp("/(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?");
+        return pattern.test(str)
+    };
+
     $(document).ready(function () {
         $(".card-title , .mt-4 span:nth-child(2)").each(function () {
             var value = parseInt($(this).html());
@@ -207,13 +276,22 @@
     });
 
     function idpayFunction() {
-        console.log('hello')
         let idpayLink = "{{safebox.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value
         if (document.getElementById('phone_enter').checked) {
             console.log("checked")
             idpayLink += '&phone={{user.phone_number}}'
         }
         document.getElementById('nextButton').href = idpayLink
+    }
+    function settingsFunction() {
+        console.log("heeres")
+        const form = document.getElementById('settingsForm')
+        const url = form.elements["gateway_url"].value
+        
+        if (isValidURL(url)) { form.submit() }
+        else {
+            document.getElementById("errorAlert").textContent = 'فرم وارد شده اشتباه است لطفا مجددا بررسی کنید '
+        }
     }
 </script>
 

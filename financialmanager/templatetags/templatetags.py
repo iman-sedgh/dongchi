@@ -5,11 +5,21 @@ from . import jalali
 register = template.Library()
 
 
-def count(deposits, user):
-    counter = deposits.filter(user=user)
+def count(box, user):
+    counter = deposit.objects.filter(user=user, box = box)
     return len(counter)
 
-
+#counts all deposits in all safeboxes for a user
+def count_all(user):
+    counter = deposit.objects.filter(user = user)
+    return len(counter)
+# calculate all of money that user deposits in all safeboxes
+def price_all(user):
+    deposits = deposit.objects.filter(user=user)
+    price = 0
+    for depos in deposits:
+        price += depos.amount
+    return price
 def to_jalali(time):
     date = jalali.Gregorian(time.date()).persian_string().replace('-',',')
     return date
@@ -41,3 +51,5 @@ register.filter('log_maker', log_maker)
 register.filter('get_name', get_name)
 register.filter('get_balance', get_balance)
 register.filter('get_time', get_time)
+register.filter('count_all', count_all)
+register.filter('price_all', price_all)

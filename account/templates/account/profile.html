@@ -29,9 +29,9 @@
 
             <ul class="list-group" style="padding-bottom: 15%;" >
                 <li class="list-group-item text-muted">فعالیت ها <i class="fa fa-dashboard fa-1x"></i></li>
-                <li class="list-group-item text-start">{{deposits|count:user}}<span class="float-end"><strong>واریزی ها
+                <li class="list-group-item text-start">{{user|count_all}}<span class="float-end"><strong>واریزی ها
                         </strong></span> </li>
-                <li class="list-group-item text-start ">0<span class="float-end"><strong>برداشت ها</strong></span>
+                <li class="list-group-item text-start ">{{user|price_all}}<span class="float-end"><strong>مبلغ کل واریزهای شما</strong></span>
                     </li>
             </ul>
 
