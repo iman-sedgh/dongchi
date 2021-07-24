@@ -1,9 +1,10 @@
+from django import forms
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from financialmanager.models import deposit
-from .forms import AvatarForm
+from .forms import AvatarForm, RegisterForm
 # Create your views here.
 
 
@@ -47,8 +48,8 @@ def profile_view(request):
 
 
 def login_view(request):
-    if request.user.is_authenticated :
-        return redirect(request,"financialmanager:box")
+    if request.user.is_authenticated:
+        return redirect("financialmanager:box_select")
     if request.method == 'GET':
         return render(request, 'account/login.html')
     else:
@@ -63,8 +64,28 @@ def login_view(request):
         else:
             messages.add_message(request, messages.WARNING,
                                  'نام کاربری یا رمز ورود اشتباه است')
-        return redirect('financialmanager:home')
+        return redirect('financialmanager:box_select')
 
 
 def logout_view(request):
-    pass
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('financialmanager:home')
+
+
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('financialmanager:box_select')
+        else:
+            messages.add_message(request,messages.ERROR,'مقادیر وارد شده را مجددا بررسی کنید')
+            return render(request, 'account/register.html', context={'form': form})
+    else:
+        form = RegisterForm()
+        return render(request, 'account/register.html', context={'form': form})

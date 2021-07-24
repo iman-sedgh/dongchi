@@ -28,7 +28,7 @@
         integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
     <!--Custom styles-->
-    <link rel="stylesheet" type="text/css" href="{% static 'account/css/login.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'account/css/register.css'%}">
 </head>
 {% if messages %}
 {% for message in messages %}
@@ -48,37 +48,63 @@
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header " style="text-align: right !important;">
-                    <h3>صفحه ورود</h3>
+                    <h3>صفحه ثبت نام</h3>
 
                 </div>
                 <div class="card-body">
                     <form method="POST">
                         {%csrf_token%}
+                        
+                        
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            {{form.username}}
+                            
+                        </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="نام کاربری " name='username'>
-
+                            {{form.first_name}}
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            {{form.last_name}}
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            {{form.email}}
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
-                            <input type="password" class="form-control" placeholder="رمز ورود" name="password">
+                            {{form.password1}}
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            {{form.password2}}
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="ورود" class="btn float-left login_btn">
+                            <input type="submit" value="ثبت نام" class="btn float-left login_btn">
                         </div>
+                        {{form.errors}}
+                        {{form.error}}
                     </form>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-center links">
-                        اکانت ندارید؟ <a href="{%url 'account:register'%}">ایجاد کنید</a>
+                        عضو هستید؟ <a href="{% url 'account:login' %}">وارد شوید</a>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        <a href="{%url 'financialmanager:home'%}">بازگشت به صفحه اصلی</a>
-                    </div>
+
                 </div>
             </div>
         </div>
