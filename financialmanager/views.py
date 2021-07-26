@@ -1,4 +1,4 @@
-from django.http.response import Http404, HttpResponse, JsonResponse
+from django.http.response import HttpResponseForbidden, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,7 +11,6 @@ from rest_framework.decorators import api_view
 # Create your views here.
 
 
-@login_required
 def home_view(request):
     return render(request, 'financialmanager/home.html')
 
@@ -19,11 +18,15 @@ def home_view(request):
 @login_required
 def box_view(request, boxslug=''):
     if boxslug == '':
-        slg = request.user.safebox.first().slug
-        return redirect('financialmanager:box', boxslug=slg)
+        if request.user.safebox.all():
+            slg = request.user.safebox.first().slug
+            return redirect('financialmanager:box', boxslug=slg)
+        else:
+            return render(request, 'financialmanager/box_select.html', context={'nobox': True})
+
     box = get_object_or_404(safebox, slug=boxslug)
     if not request.user in box.members.all():
-        raise Http404(request)
+        return HttpResponseForbidden()
     else:
         data = {
             "members": User.objects.filter(is_financialstaff=True, safebox=box).order_by(Case(When(id=request.user.id, then=0), default=1), 'id'),
@@ -66,7 +69,7 @@ def deposit_view(request):
     if request.method == 'GET':
         print(""" hey I'm Here GET """)
         print(request.method)
-        return Response({'method': 'GET'})
+        return JsonResponse({'method': 'GET'})
 
     elif request.method == 'POST':  # webhook From IDpay
         data = request.data
@@ -78,7 +81,7 @@ def deposit_view(request):
         )
         model.save()
 
-        return Response({'Status': 'Done'})
+        return JsonResponse({'Status': 'Done'})
 
 
 @api_view(['POST'])
@@ -91,4 +94,29 @@ def box_settings(request):
     box.save()
     messages.add_message(request, messages.SUCCESS,
                          'تنظیمات با موفقیت اعمال شد ')
-    return redirect('financialmanager:box',boxslug = box.slug)
+    return redirect('financialmanager:box', boxslug=box.slug)
+
+
+@api_view(['POST'])
+def box_creation(request):
+    data = request.POST
+    box = safebox(
+        name=data['boxname'],
+        creator = request.user,
+        details = data['boxdetails'],
+        payment_gateway = data['gateway_url'],
+        slug = data['boxslug']
+    )
+    box.save()
+    box.members.add(request.user)
+    box.save()
+    messages.add_message(request,messages.SUCCESS , 'صندوق شما با موفقیت ساخته شد')
+    return redirect('financialmanager:box_select')
+
+@login_required
+def box_join(request,inviteid):
+    box = get_object_or_404(safebox,invite_id=inviteid)
+    box.members.add(request.user)
+    box.save()
+    messages.add_message(request,messages.SUCCESS,f'شما با موفقیت به صندوق {box.name} اضافه شدید')
+    return redirect('financialmanager:box_select')

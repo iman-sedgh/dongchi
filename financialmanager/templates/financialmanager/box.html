@@ -3,10 +3,12 @@
 {% load templatetags %}
 
 {%block main%}
+
 <!--Icons-->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!--Icons-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'financialmanager/js/box.js'%}"></script>
 <link rel="stylesheet" type="text/css" href="{% static  'financialmanager/css/box.css' %}">
 <div class='container' style="direction: rtl;">
     <div class="row">
@@ -15,7 +17,7 @@
                 <option value="{{box.slug}}" selected>{{box.name}}</option>
                 {% for abox in user.safebox.all%}
                 {% ifnotequal abox box %}
-                <option value="{{abox.slug}}">{{abox.name}}</option>
+                <option value="{% url 'financialmanager:box' abox.slug %}">{{abox.name}}</option>
                 {%endifnotequal%}
                 {% endfor %}
             </select>
@@ -79,7 +81,6 @@
             </div>
         </div>
     </div>
-
     <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-primary "
         style="width: 380px; float: right; direction: rtl;">
         <a href="/" class="d-flex align-items-center flex-shrink-0 p-3  link-dark text-decoration-none border-bottom">
@@ -246,7 +247,7 @@
                     <input type="hidden" value="{{box.slug}}" name="safebox">
                   
                 </form>
-
+                <a href = "http://{{request.get_host}}/box/join/{{box.invite_id}}" >لینک عضویت</a>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
@@ -260,45 +261,17 @@
 
 <!--Modals-->
 
-<script>
-    function isValidURL(str) {
-        var pattern = new RegExp("/(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?");
-        return pattern.test(str)
-    };
 
-    $(document).ready(function () {
-        $(".card-title , .mt-4 span:nth-child(2)").each(function () {
-            var value = parseInt($(this).html());
-            if (value < 0) {
-                $(this).css('color', 'red');
-            }
-        });
-    });
-
-    function idpayFunction() {
-        let idpayLink = "{{safebox.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value
-        if (document.getElementById('phone_enter').checked) {
-            console.log("checked")
-            idpayLink += '&phone={{user.phone_number}}'
-        }
-        document.getElementById('nextButton').href = idpayLink
-    }
-    function settingsFunction() {
-        console.log("heeres")
-        const form = document.getElementById('settingsForm')
-        const url = form.elements["gateway_url"].value
-        
-        if (isValidURL(url)) { form.submit() }
-        else {
-            document.getElementById("errorAlert").textContent = 'فرم وارد شده اشتباه است لطفا مجددا بررسی کنید '
-        }
-    }
-</script>
 
 <script>
-    document.getElementById("box-select").onchange = function () {
-
-        window.location.href = (document.getElementById('box-select').value)
-    };
+function idpayFunction() {
+    let idpayLink = "{{box.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value
+    if (document.getElementById('phone_enter').checked) {
+        console.log("checked")
+        idpayLink += '&phone={{user.phone_number}}'
+    }
+    document.getElementById('nextButton').href = idpayLink
+}
 </script>
+
 {%endblock%}

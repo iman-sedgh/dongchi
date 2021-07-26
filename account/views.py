@@ -30,7 +30,7 @@ def profile_view(request):
             user.first_name = data['first_name']
             user.last_name = data['last_name']
             user.email = data['email']
-            #user.phone_number = data['phone']
+            user.phone_number = data['phone']
             user.save()
             messages.add_message(request, messages.SUCCESS,
                                  'مشخصات شما با موفقیت اصلاح شد')

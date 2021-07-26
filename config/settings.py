@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u23f(x&q!*9@xe+4r$ne5_p^7wt*+__ubbn+mk$k0nqr5gq9(z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'financialmanager.apps.FinancialmanagerConfig',
-    'account.apps.AccountConfig',
-    'rest_framework',
+    'account.apps.AccountConfig'
+#    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+APPEND_SLASH =True
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -127,8 +127,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = BASE_DIR / 'media'
-
+MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = '/files/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
