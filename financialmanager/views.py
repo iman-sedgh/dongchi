@@ -102,21 +102,32 @@ def box_creation(request):
     data = request.POST
     box = safebox(
         name=data['boxname'],
-        creator = request.user,
-        details = data['boxdetails'],
-        payment_gateway = data['gateway_url'],
-        slug = data['boxslug']
+        creator=request.user,
+        details=data['boxdetails'],
+        payment_gateway=data['gateway_url'],
+        slug=data['boxslug']
     )
     box.save()
     box.members.add(request.user)
     box.save()
-    messages.add_message(request,messages.SUCCESS , 'صندوق شما با موفقیت ساخته شد')
+    messages.add_message(request, messages.SUCCESS,
+                         'صندوق شما با موفقیت ساخته شد')
     return redirect('financialmanager:box_select')
 
+
 @login_required
-def box_join(request,inviteid):
-    box = get_object_or_404(safebox,invite_id=inviteid)
-    box.members.add(request.user)
-    box.save()
-    messages.add_message(request,messages.SUCCESS,f'شما با موفقیت به صندوق {box.name} اضافه شدید')
+def box_join(request, inviteid):
+    try:
+         box = safebox.objects.get(invite_id=inviteid)
+    except:
+        messages.add_message(request, messages.ERROR,
+                             'لینک دعوت معتبر نمی باشد')
+        return redirect('financialmanager:box_select')
+    if request.user in box.members.all():
+        messages.add_message(request,messages.INFO,'شما در حال حاضر عضو صندوق می باشید')
+    else:
+        box.members.add(request.user)
+        box.save()
+        messages.add_message(request, messages.SUCCESS,
+                             f' شما با موفقیت به صندوق {box.name} اضافه شدید ')
     return redirect('financialmanager:box_select')
