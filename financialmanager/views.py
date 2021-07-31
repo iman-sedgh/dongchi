@@ -61,7 +61,7 @@ def withdraw_view(request):
         model.payer.set(payers)
         model.save()
         messages.add_message(request, messages.SUCCESS, 'برداشت وجه ثبت شد')
-        return redirect("financialmanager:home")
+        return redirect("financialmanager:box",boxslug=model.box.slug)
 
 
 @api_view(['GET', 'POST'])
