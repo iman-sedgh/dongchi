@@ -1,0 +1,45 @@
+version: "3"
+services: 
+    mysql:
+        image: mysql:5.7
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: "dongchi"          
+            MYSQL_ROOT_PASSWORD: "djangouserpassword"
+        restart: always
+        volumes: 
+            - mysql_data_volume:/var/lib/mysql
+        networks: 
+            - mysql_network
+        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    dongchi:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        volumes: 
+            - .:/home/dongchiapp
+            - dongchi_static_volume:/home/dongchiapp/static
+            - dongchi_media_volume:/home/dongchiapp/media
+        restart: always
+        depends_on:
+            - mysql
+        ports: 
+            - "8000:8000"
+        networks: 
+            - mysql_network
+            - nginx_network
+
+    
+volumes: 
+    mysql_data_volume:
+        external: true
+    dongchi_static_volume:
+        external: true
+    dongchi_media_volume:
+        external: true 
+networks: 
+    mysql_network:
+        external: true
+    nginx_network:
+        external: true
