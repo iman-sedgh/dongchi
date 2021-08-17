@@ -94,6 +94,7 @@ created superuser can login to admin panel ("domain.com/admin") superuser can cr
 ## Screenshots
 ![screenshot1](screenshots/screenshot1.png)
 &nbsp;
+---
 &nbsp;
 ![screenshot2](screenshots/screenshot2.png)
 ## Contribution
