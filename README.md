@@ -43,7 +43,7 @@ add your user to docker group then your user can run docker commands
 ```
 sudo usermod -aG docekr ${USER}
 ```
-you can run ``docker ps ``  to make sure docker installed successfully 
+you can run ``docker ps``  to make sure docker installed successfully 
 find complete docker installation proccess in [docker documents](https://docs.docker.com/engine/install/)
 #### Run docker containers
 first clone git repository
@@ -71,7 +71,7 @@ run nginx webserver container
 cd config/nginx 
 docker-compose up -d 
 ```
-Done ! 
+Done!  
 now dongchi web service should be up on port 80 
 you can see containers with `docker ps ` command
 expected output should be something like this: 
@@ -87,8 +87,8 @@ migrations can apply to database by connecting to docker container and run migra
 docker exec -it dongchi_dongchi_1 bash
 python manage.py migrate 
 ```
-creating superuser :
-`python manage.py createsuperuser`
+##### creating superuser:
+`python manage.py createsuperuser`  
 created superuser can login to admin panel ("domain.com/admin") superuser can create or manage deposit/withdraw/safebox/user ... from django admin panel
 
 ## Screenshots
