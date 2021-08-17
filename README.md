@@ -8,7 +8,7 @@ Dongchi is a simple service made for personal usage and now is published for fre
 - [About the project](#about-the-project)  
 - [Getting Started](#getting-started)  
 - [installation](#docker-installation-recommended)  
-- [Screenshots](#screens)  
+- [Screenshots](#screenshots)
 - [Contribution](#contribution)
 
 
@@ -93,6 +93,8 @@ created superuser can login to admin panel ("domain.com/admin") superuser can cr
 
 ## Screenshots
 ![screenshot1](screenshots/screenshot1.png)
+&nbsp;
+&nbsp;
 ![screenshot2](screenshots/screenshot2.png)
 ## Contribution
 contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
