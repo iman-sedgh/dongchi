@@ -7,9 +7,10 @@ Dongchi is a simple service made for personal usage and now is published for fre
 - [Introduction](#dongchi-app)  
 - [About the project](#about-the-project)  
 - [Getting Started](#getting-started)  
-- [installation](#docker-installation-recommended)  
+- [Docker installation](#docker-installation-recommended)  
 - [Screenshots](#screenshots)
 - [Contribution](#contribution)
+- [Contact me](#contact-me)
 
 
 
@@ -19,7 +20,7 @@ You can create a safe box (صندوق) and invite your friends to join .
 Each member of the safe box owns a balance and each box has got a sum total balance of all members` parts.
 Regarding the bright side, each user could take part in several different boxes or even create one as easy as possible .
 When you deposit some money in one of your boxes, your own balance and total balance will increase(only in that specific box)
-and when some money takes out, the balance of members would equally decrease.
+and when some money is taken out, the balance of members would relatively decrease.
 
 ### Built With
 I used Django framework for backend and Bootstrap for forntend
@@ -108,3 +109,9 @@ Its recommended to :
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## contact me 
+ contact me in [telegram](https://t.me/iman_sedgh) or [email](mailto:iman.sedgh@yahoo.com)
+
+ Special thanks to:
+ [amir.bzrj](https://www.instagram.com/amir.bzrj/) for compiling this README file
