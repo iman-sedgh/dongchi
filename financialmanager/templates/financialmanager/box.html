@@ -267,7 +267,7 @@
 
 <script>
 function idpayFunction() {
-    let idpayLink = "{{box.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value + "&desc=" + document.getElementById('description').value +" {{box.id}}"
+    let idpayLink = "{{box.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value + "0" + "&desc=" + document.getElementById('description').value +" {{box.id}}"
     if (document.getElementById('phone_enter').checked) {
         console.log("checked")
         idpayLink += '&phone={{user.phone_number}}'

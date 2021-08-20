@@ -72,7 +72,7 @@ def deposit_view(request):  # webhook From IDpay
     safe_id = data["payer"]["desc"].split()[-1]
     model = deposit(
         user=usr,
-        amount=int(data['amount']),
+        amount=int(data['amount'])/10, #Convert Rial to Toman
         details=' '.join(data["payer"]["desc"].split()[:-1]),
         box=safebox.objects.get(id=safe_id)
     )
