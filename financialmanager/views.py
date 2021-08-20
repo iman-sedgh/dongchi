@@ -61,27 +61,23 @@ def withdraw_view(request):
         model.payer.set(payers)
         model.save()
         messages.add_message(request, messages.SUCCESS, 'برداشت وجه ثبت شد')
-        return redirect("financialmanager:box",boxslug=model.box.slug)
+        return redirect("financialmanager:box", boxslug=model.box.slug)
 
 
-@api_view(['GET', 'POST'])
-def deposit_view(request):
-    if request.method == 'GET':
-        print(""" hey I'm Here GET """)
-        print(request.method)
-        return JsonResponse({'method': 'GET'})
-
-    elif request.method == 'POST':  # webhook From IDpay
-        data = request.data
-        model = deposit(
-            user=User.objects.get(username=data['name']),
-            amount=data['amount'],
-            details=data['payer']['desc'],
-            box=safebox.objects.get(id=1)
-        )
-        model.save()
-
-        return JsonResponse({'Status': 'Done'})
+@api_view(['POST'])
+def deposit_view(request):  # webhook From IDpay
+    data = request.data
+    usr = User.objects.get(username=data["payer"]["name"])
+    # Safe Box ID is last 'word' in description
+    safe_id = data["payer"]["desc"].split()[-1]
+    model = deposit(
+        user=usr,
+        amount=int(data['amount']),
+        details=' '.join(data["payer"]["desc"].split()[:-1]),
+        box=safebox.objects.get(id=safe_id)
+    )
+    model.save()
+    return JsonResponse({'Status': 'Done'})
 
 
 @api_view(['POST'])
@@ -118,13 +114,14 @@ def box_creation(request):
 @login_required
 def box_join(request, inviteid):
     try:
-         box = safebox.objects.get(invite_id=inviteid)
+        box = safebox.objects.get(invite_id=inviteid)
     except:
         messages.add_message(request, messages.ERROR,
                              'لینک دعوت معتبر نمی باشد')
         return redirect('financialmanager:box_select')
     if request.user in box.members.all():
-        messages.add_message(request,messages.INFO,'شما در حال حاضر عضو صندوق می باشید')
+        messages.add_message(request, messages.INFO,
+                             'شما در حال حاضر عضو صندوق می باشید')
     else:
         box.members.add(request.user)
         box.save()

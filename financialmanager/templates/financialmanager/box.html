@@ -195,6 +195,8 @@
                     <input type="number" class="form-control" id="amount" aria-describedby="basic-addon3">
                     <span class="input-group-text" id="basic-addon3">تومان</span>
                 </div>
+                <label for="description" class="form-label">توضیحات</label>
+                <textarea class="form-control" id="description" rows="2"></textarea>
                 <input class="form-check-input" type="checkbox" value="" id="phone_enter" name="phone_checkbox" checked>
                 <label class="form-check-label" for="phone_enter">
                     شماره موبایل وارد شود؟
@@ -265,7 +267,7 @@
 
 <script>
 function idpayFunction() {
-    let idpayLink = "{{box.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value
+    let idpayLink = "{{box.payment_gateway}}?name={{user.username}}&amount=" + document.getElementById('amount').value + "&desc=" + document.getElementById('description').value +" {{box.id}}"
     if (document.getElementById('phone_enter').checked) {
         console.log("checked")
         idpayLink += '&phone={{user.phone_number}}'
