@@ -11,4 +11,4 @@ media
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
-
+.env
