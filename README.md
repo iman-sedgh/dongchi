@@ -15,12 +15,12 @@ Dongchi is a simple service made for personal usage and now is published for fre
 
 
 ## About The Project
-Dongchi is a Service in which you could manage your "Dong"s.
-You can create a safe box (صندوق) and invite your friends to join .
-Each member of the safe box owns a balance and each box has got a sum total balance of all members` parts.
-Regarding the bright side, each user could take part in several different boxes or even create one as easy as possible .
-When you deposit some money in one of your boxes, your own balance and total balance will increase(only in that specific box)
-and when some money is taken out, the balance of members would relatively decrease.
+Dongchi is a Service in which you could manage your "Dong"s.  
+You can create a safe box (صندوق) and invite your friends to join.  
+Each member of the safe box owns a balance and each box has got a sum total balance of all members` parts.  
+Regarding the bright side, each user could take part in several different boxes or even create one as easy as possible.  
+When you deposit some money in one of your boxes, your own balance and total balance will increase(only in that specific box)  
+and when some money is taken out, the balance of members would relatively decrease.  
 
 ### Built With
 I used Django framework for backend and Bootstrap for forntend
@@ -99,8 +99,11 @@ created superuser can login to admin panel ("domain.com/admin") superuser can cr
 &nbsp;
 ![screenshot2](screenshots/screenshot2.png)
 ## Contribution
-contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+contributions are what make the open source community such an amazing place to be learn, inspire, and create.  
+Any contributions you make are **greatly appreciated**.  
 this project may have many issues feel free to contribute and make it better :) 
+
+you can see needed features or bugs from [Issues in github](https://github.com/iman-sedgh/dongchi/issues)  
 
 Its recommended to :
 
