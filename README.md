@@ -42,7 +42,7 @@ sudo apt install docker.io docker-compose
 ```
 add your user to docker group then your user can run docker commands 
 ```
-sudo usermod -aG docekr ${USER}
+sudo usermod -aG docker ${USER}
 ```
 you can run ``docker ps``  to make sure docker installed successfully 
 find complete docker installation proccess in [docker documents](https://docs.docker.com/engine/install/)
@@ -63,13 +63,14 @@ create this docker networks
 docker network create mysql_network
 docker network create nginx_network
 ```
-run django and database containers (needs to be in 'dongchi' directory)
+run django and database containers (you need to be in 'dongchi' directory)
+(Note: if your server is located in 'Iran' docker container registry is not available its recommended to use VPN or [shecan DNS](https://shecan.ir))
 ```
 docker-compose up -d 
 ```
 run nginx webserver container 
 ```
-cd config/nginx 
+cd conf/nginx
 docker-compose up -d 
 ```
 Done!  
