@@ -16,7 +16,7 @@ class safebox(models.Model):
     details = models.CharField(max_length=1000, blank=True)
     balance = models.BigIntegerField(default=0)
     payment_gateway = models.URLField(blank=True)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     invite_id = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     def __str__(self):
@@ -48,7 +48,7 @@ class deposit(models.Model):  # put money
 
 class withdraw(models.Model):  # take money
 
-    payer = models.ManyToManyField(User, default=User.objects.all)
+    payer = models.ManyToManyField(User)
     amount = models.BigIntegerField()
     date = models.DateTimeField(auto_now_add=True)
     details = models.CharField(max_length=1000, blank=True)

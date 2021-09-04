@@ -72,7 +72,7 @@ def deposit_view(request):  # webhook From IDpay
     safe_id = data["payer"]["desc"].split()[-1]
     model = deposit(
         user=usr,
-        amount=int(data['amount'])/10, #Convert Rial to Toman
+        amount=int(data['amount'])/10,  # Convert Rial to Toman
         details=' '.join(data["payer"]["desc"].split()[:-1]),
         box=safebox.objects.get(id=safe_id)
     )
@@ -103,11 +103,16 @@ def box_creation(request):
         payment_gateway=data['gateway_url'],
         slug=data['boxslug']
     )
-    box.save()
-    box.members.add(request.user)
-    box.save()
-    messages.add_message(request, messages.SUCCESS,
-                         'صندوق شما با موفقیت ساخته شد')
+    try:
+        box.validate_unique()
+        box.save()
+        box.members.add(request.user)
+        box.save()
+        messages.add_message(request, messages.SUCCESS,
+                             'صندوق شما با موفقیت ساخته شد')
+    except:
+        messages.add_message(
+            request, messages.ERROR, 'صندوقی با این نامک موجود است لطفا یک نامک دیگر انتخاب کنید')
     return redirect('financialmanager:box_select')
 
 
