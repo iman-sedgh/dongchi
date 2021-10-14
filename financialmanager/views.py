@@ -3,8 +3,11 @@ from django.shortcuts import redirect, render, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Case, When
+from django.utils.text import slugify
+import re
 from .models import withdraw, safebox, deposit, balance
 from account.models import User
+from unidecode import unidecode
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
@@ -96,12 +99,16 @@ def box_settings(request):
 @api_view(['POST'])
 def box_creation(request):
     data = request.POST
+    tmpslug = data['boxslug']
+    if re.match("^[-\w]+$",tmpslug) == None:
+        tmpslug = slugify(unidecode(data['boxname']))
+
     box = safebox(
         name=data['boxname'],
         creator=request.user,
         details=data['boxdetails'],
         payment_gateway=data['gateway_url'],
-        slug=data['boxslug']
+        slug=tmpslug
     )
     try:
         box.validate_unique()
