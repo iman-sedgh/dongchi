@@ -4,7 +4,7 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
+media/avatars
 .vscode/* 
 !.vscode/settings.json 
 !.vscode/tasks.json 
